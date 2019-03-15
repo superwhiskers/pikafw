@@ -1,0 +1,8 @@
+[package]
+name = "ferrisfw"
+version = "0.1.0"
+authors = ["superwhiskers <whiskerdev@protonmail.com>"]
+edition = "2018"
+
+[dependencies]
+
