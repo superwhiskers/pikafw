@@ -17,5 +17,8 @@
     "exe-suffix": ".elf",
     "linker-flavor": "gcc",
     "disable-redzone": "true",
-    "panic-strategy": "abort"
+    "panic-strategy": "abort",
+    "pre-link-args": {
+	"gcc": ["-nostartfiles"]
+    }
 }

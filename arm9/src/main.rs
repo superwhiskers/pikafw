@@ -1,6 +1,6 @@
 /*
 
-ferrisfw - 3ds custom firmware in rust
+pikafw - 3ds custom firmware in rust
 Copyright (C) 2019 superwhiskers <whiskerdev@protonmail.com>
 
 This program is free software: you can redistribute it and/or modify

@@ -1,4 +1,4 @@
-# ferrisfw
+# pikafw
 
 experimental 3ds custom firmware in rust
 
