@@ -102,6 +102,7 @@ $(output)/arm11.bin:
 	    -C opt-level=3              \
 	    -C lto=thin                 \
 	    -C debuginfo=0              \
+	    -C link-arg=-Tlayout.ld     \
 	    $(rustflags)
 	@$(OBJCOPY) --set-section-flags .bss=alloc,load,contents -O binary $(build)/arm11/release/$(name).elf $@
 
