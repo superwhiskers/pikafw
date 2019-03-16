@@ -77,7 +77,8 @@ clean: $(directories)
 #
 
 $(output)/$(name).zip: all
-	@mkdir -p $(output)/$(name)
+	@mkdir -p $(@D)
+	@zip -r $@ $(@D)
 
 $(output)/boot.firm: $(build)/arm9.bin $(build)/arm11.bin
 	@mkdir -p $(@D)
@@ -86,7 +87,9 @@ $(output)/boot.firm: $(build)/arm9.bin $(build)/arm11.bin
 $(build)/arm9.bin: $(directory_arm9)
 	@mkdir -p $(@D)
 	@$(MAKE) -C $<
+	@cp $(directory_arm9)/out/arm9.bin $@
 
 $(build)/arm11.bin: $(directory_arm11)
 	@mkdir -p $(@D)
 	@$(MAKE) -C $<
+	@cp $(directory_arm11)/out/arm11.bin $@

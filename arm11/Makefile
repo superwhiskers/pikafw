@@ -47,13 +47,13 @@ export outer_project_root := $(project_root)/../
 # output is the directory where the final artifacts are contained
 # manifest is the Cargo.toml file to instruct cargo to use
 #
-export name     := pikafw-arm9
+export name     := pikafw-arm11
        build    := $(project_root)/build
        output   := $(project_root)/out
        manifest := $(project_root)/Cargo.toml
 
 # target specification loaction
-export spec := $(outer_project_root)/assets/arm9.json
+export spec := $(outer_project_root)/assets/arm11.json
 
 #
 # build flags!
@@ -78,7 +78,7 @@ export cargoflags :=
 all: bin
 
 .PHONY: bin
-bin: $(output)/arm9.bin
+bin: $(output)/arm11.bin
 
 .PHONY: clean
 clean:
@@ -90,7 +90,7 @@ clean:
 # file targets!
 #
 
-$(output)/arm9.bin:
+$(output)/arm11.bin:
 	@mkdir -p $(@D)
 	@cargo xrustc                   \
 	    --release                   \
@@ -103,5 +103,5 @@ $(output)/arm9.bin:
 	    -C lto=thin                 \
 	    -C debuginfo=0              \
 	    $(rustflags)
-	@$(OBJCOPY) --set-section-flags .bss=alloc,load,contents -O binary $(build)/arm9/release/$(name).elf $@
+	@$(OBJCOPY) --set-section-flags .bss=alloc,load,contents -O binary $(build)/arm11/release/$(name).elf $@
 
