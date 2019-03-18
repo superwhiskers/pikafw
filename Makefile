@@ -71,6 +71,7 @@ firm: $(output)/boot.firm
 clean: $(directories)
 	@$(MAKE) -C $(directory_arm9) clean
 	@$(MAKE) -C $(directory_arm11) clean
+	@rm -rf $(output) $(build)
 
 #
 # file targets!

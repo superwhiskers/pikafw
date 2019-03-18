@@ -83,8 +83,7 @@ bin: $(output)/arm9.bin
 .PHONY: clean
 clean:
 	@cargo clean
-	@rm -rf $(build)
-	@rm -rf $(output)
+	@rm -rf $(output) $(build)
 
 #
 # file targets!

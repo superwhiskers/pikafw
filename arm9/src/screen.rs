@@ -18,32 +18,3 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#![no_std]
-#![no_main]
-
-#![feature(global_asm)]
-
-mod screen;
-mod panic;
-
-// include the assembly file that provides the _start function
-global_asm!(include_str!("start.s"));
-
-#[no_mangle]
-pub extern "C" fn main() -> ! {
-    loop {}
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn memset32(destination: *const u32, filler: u32, size: u32) {
-
-    let destination_32 = destination as *mut usize;
-    let size_32 = size as isize;
-    let filler_32 = filler as usize;
-    for i in 0..(size_32/4) {
-
-        *destination_32.offset(i) = filler_32;
-
-    }
-
-}

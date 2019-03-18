@@ -16,6 +16,11 @@
 @ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 @
 
+@
+@ start.s file from Luma3DS
+@ https://github.com/AuroraWright/Luma3DS	
+@
+
 .section .text.start, "ax", %progbits
 .align 4
 .global _start
