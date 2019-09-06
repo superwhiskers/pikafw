@@ -17,17 +17,6 @@
 #
 
 #
-# dependency checks!
-#
-
-# make sure devkitarm is set
-ifeq ($(strip $(DEVKITARM)),)
-$(error "please set the DEVKITARM variable in your environment. e.x export DEVKITARM=/path/to/devkitarm")
-endif
-
-include $(DEVKITARM)/base_tools
-
-#
 # root directory configuration!
 #
 
@@ -103,5 +92,5 @@ $(output)/arm11.bin:
 	    -C debuginfo=0              \
 	    -C link-arg=-Tlayout.ld     \
 	    $(rustflags)
-	@$(OBJCOPY) --set-section-flags .bss=alloc,load,contents -O binary $(build)/arm11/release/$(name).elf $@
+	@llvm-objcopy -B arm -O binary $(build)/arm11/release/$(name).elf $@
 

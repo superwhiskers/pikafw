@@ -6,6 +6,7 @@ experimental 3ds custom firmware in rust
 
 - cargo-xbuild
 - firmtool
+- a fully working llvm 8 install (lld included)
 
 # status
 
