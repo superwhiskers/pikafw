@@ -30,6 +30,7 @@ global_asm!(include_str!("start.s"));
 
 #[no_mangle]
 pub extern "C" fn main() -> ! {
+    // there's really nothing to do rn
     loop {}
 }
 

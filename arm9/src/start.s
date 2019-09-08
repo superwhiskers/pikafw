@@ -21,9 +21,9 @@
 @ https://github.com/AuroraWright/Luma3DS	
 @
 
-.section .text.start, "ax", %progbits
-.align 4
+.section .text.start
 .global _start
+.align 4
 _start:
     @ Disable interrupts and switch to supervisor mode (also clear flags)
     msr cpsr_cxsf, #0xD3
@@ -109,12 +109,11 @@ _start:
 
     @ Clear BSS
     ldr r0, =__bss_start
-    mov r1, #0
-    ldr r2, =__bss_end
-    sub r2, r0
-    bl memset32
+    ldr r1, =__bss_end
+    mov r2, #0
+    .bss_clr:
+    	cmp r0, r1
+	strlt r2, [r0], #4
+	blo .bss_clr
 
-    mov r0, r9
-    mov r1, r10
-    mov r2, r11
     b main

@@ -18,20 +18,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#![no_std]
-#![no_main]
-#![feature(global_asm)]
+macro_rules! rgb {
+    ($r:expr, $g:expr, $b:expr) => {
+        ($r as u32 >> 3) << 11 | ($g as u32 >> 2) << 5 | ($b as u32 >> 3)
+    };
+}
 
-mod colors;
-mod panic;
-mod screen;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u32)]
+pub enum Color {
+    Black = rgb![0, 0, 0],
+    White = rgb![255, 255, 255],
+    Grey = rgb![128, 128, 128],
 
-// include the assembly file that provides the _start function
-global_asm!(include_str!("start.s"));
-
-#[no_mangle]
-pub extern "C" fn main() -> ! {
-    loop {
-        screen::SCREEN_TOP.clear(colors::Color::Green as u32);
-    }
+    Red = rgb![255, 0, 0],
+    Green = rgb![0, 255, 0],
+    Blue = rgb![0, 0, 255],
 }

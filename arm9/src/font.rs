@@ -18,20 +18,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#![no_std]
-#![no_main]
-#![feature(global_asm)]
+const MAX_FONT_WIDTH: u16 = 8;
+const MAX_FONT_HEIGHT: u16 = 10;
 
-mod colors;
-mod panic;
-mod screen;
-
-// include the assembly file that provides the _start function
-global_asm!(include_str!("start.s"));
-
-#[no_mangle]
-pub extern "C" fn main() -> ! {
-    loop {
-        screen::SCREEN_TOP.clear(colors::Color::Green as u32);
-    }
+// TODO: add pbm loading
+/*
+pub struct Font {
+    width: u32,
+    height: u32,
+    line_height: u32,
+    data: [u8; MAX_FONT_HEIGHT * 256],
 }
+
+impl Font {
+    fn from_pbm(
+*/

@@ -54,10 +54,13 @@ start:
 
     @ Clear BSS
     ldr r0, =__bss_start
-    mov r1, #0
-    ldr r2, =__bss_end
-    sub r2, r0
-    bl memset32
+    ldr r1, =__bss_end
+    mov r2, #0
+    
+    .bss_clr:
+    	cmp r0, r1
+	strlt r2, [r0], #4
+	blo .bss_clr
 
     ldr sp, =__stack_top__
     b main
