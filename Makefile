@@ -17,15 +17,6 @@
 #
 
 #
-# dependency checks!
-#
-
-# check if firmtool is up to date
-ifneq ($(strip $(shell firmtool -v 2>&1 | grep usage)),)
-$(error "please install firmtool v1.1 or greater")
-endif
-
-#
 # root directory configuration!
 #
 
@@ -81,9 +72,10 @@ $(output)/$(name).zip: all
 	@mkdir -p $(@D)
 	@zip -r $@ $(@D)
 
-$(output)/boot.firm: $(build)/arm9.bin $(build)/arm11.bin
+$(output)/boot.firm: $(build)/arm9.bin # $(build)/arm11.bin
 	@mkdir -p $(@D)
-	@firmtool build $@ -n 0x08006800 -e 0x1FF80000 -D $^ -A 0x08006800 0x1FF80000 -C NDMA XDMA
+	# @./firmtool.py build $@ -n 0x08006800 -e 0x1FF80000 -D $^ -A 0x08006800 0x1FF80000 -C NDMA XDMA
+	@./firmtool.py build $@ -n 0x23F00000 -e 0 -D $^ -A 0x23F00000 -C NDMA -i
 
 $(build)/arm9.bin: $(directory_arm9)
 	@mkdir -p $(@D)

@@ -3,8 +3,8 @@
     "llvm-target": "armv5te-none-eabi",
     "target-env": "3ds-arm9-baremetal",
     "requires-lto": true,
-    "linker": "ld.lld",
-    "ar": "llvm-ar",
+    "linker": "arm-none-eabi-ld.bfd",
+    "ar": "ar",
     "target-endian": "little",
     "target-pointer-width": "32",
     "target-c-int-width": "32",
@@ -16,7 +16,7 @@
     "relocation-model": "static",
     "executables": true,
     "exe-suffix": ".elf",
-    "linker-flavor": "ld.lld",
+    "linker-flavor": "ld",
     "disable-redzone": true,
     "panic-strategy": "abort"
 }

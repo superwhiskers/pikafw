@@ -33,17 +33,3 @@ pub extern "C" fn main() -> ! {
     // there's really nothing to do rn
     loop {}
 }
-
-#[no_mangle]
-pub unsafe extern "C" fn memset32(destination: *const u32, filler: u32, size: u32) {
-
-    let destination_32 = destination as *mut usize;
-    let size_32 = size as isize;
-    let filler_32 = filler as usize;
-    for i in 0..(size_32/4) {
-
-        *destination_32.offset(i) = filler_32;
-
-    }
-
-}

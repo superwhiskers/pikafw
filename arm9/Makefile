@@ -80,7 +80,7 @@ clean:
 
 $(output)/arm9.bin:
 	@mkdir -p $(@D)
-	@cargo xrustc                   \
+	@cargo rustc                    \
 	    --release                   \
 	    --target-dir $(build)       \
 	    --manifest-path $(manifest) \
@@ -92,5 +92,5 @@ $(output)/arm9.bin:
 	    -C debuginfo=0              \
 	    -C link-arg=-Tlayout.ld     \
 	    $(rustflags)
-	@llvm-objcopy -B arm -O binary $(build)/arm9/release/$(name).elf $@
+	@arm-none-eabi-objcopy -O binary $(build)/arm9/release/$(name).elf $@
 

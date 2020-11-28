@@ -18,8 +18,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-/// address of the start of vram
+use crate::colors::Color;
+
 pub const VRAM_START: u32 = 0x18300000;
+pub const TOP_SCREEN: u32 = VRAM_START;
+pub const TOP_VRAM_LENGTH: u32 = 400 * 240 * 4;
+pub const BOTTOM_SCREEN: u32 = VRAM_START + TOP_VRAM_LENGTH;
+pub const BOTTOM_VRAM_LENGTH: u32 = 320 * 240 * 4;
+pub const VRAM_END: u32 = VRAM_START + TOP_VRAM_LENGTH + BOTTOM_VRAM_LENGTH;
 
 /// height of both screens
 pub const SCREEN_HEIGHT: u32 = 240;
@@ -37,13 +43,13 @@ pub struct Screen {
 }
 
 impl Screen {
-    pub fn new(start: u32, width: u32) -> Screen {
+    pub const fn new(start: u32, width: u32) -> Screen {
         Screen { start, width }
     }
 
-    pub fn clear(&self, color: u32) {
-        let color = color | color << 16;
-        for i in 0..self.width * SCREEN_HEIGHT {
+    pub fn clear(&self, color: Color) {
+        let color = color as u32 | (color as u32) << 16;
+        for i in 0..self.width * SCREEN_HEIGHT / 2{
             unsafe {
                 *(self.start as *mut u32).offset(i as isize) = color;
             }
@@ -62,13 +68,13 @@ impl Screen {
 }
 
 /// the top screen
-pub static SCREEN_TOP: Screen = Screen {
-    start: VRAM_START,
+pub const SCREEN_TOP: Screen = Screen {
+    start: TOP_SCREEN,
     width: 400,
 };
 
 /// the bottom screen
-pub static SCREEN_BOTTOM: Screen = Screen {
-    start: VRAM_START + ((400 * SCREEN_HEIGHT) * 4),
+pub const SCREEN_BOTTOM: Screen = Screen {
+    start: BOTTOM_SCREEN,
     width: 320,
 };

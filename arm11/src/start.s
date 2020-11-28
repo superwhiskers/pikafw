@@ -23,61 +23,90 @@
 	
 .section .text.start
 .align 4
+
+@ #include <arm.h>
+
+@ #define STACK_SZ    (8192)
+
 .global _start
-.type   _start, %function
 _start:
-b start
+    cpsid aif, #0x32
+    clrex
 
-.global operation
-operation:
-    .word 0
-
-start:
-    @ Disable interrupts and switch to supervisor mode
-    cpsid aif, #0x13
-
-    @ Set the control register to reset default: everything disabled
-    ldr r0, =0x54078
-    mcr p15, 0, r0, c1, c0, 0
-
-    @ Set the auxiliary control register to reset default.
-    @ Enables instruction folding, static branch prediction,
-    @ dynamic branch prediction, and return stack.
-    mov r0, #0xF
-    mcr p15, 0, r0, c1, c0, 1
-
-    @ Invalidate both caches, flush the prefetch buffer then DSB
+    @ Writeback and invalidate all DCache
+    @ Invalidate all caches
+    @ Data Synchronization Barrier
     mov r0, #0
-    mcr p15, 0, r0, c7, c5, 4
+    mcr p15, 0, r0, c7, c10, 0
     mcr p15, 0, r0, c7, c7, 0
     mcr p15, 0, r0, c7, c10, 4
 
-    @ Clear BSS
-    ldr r0, =__bss_start
-    ldr r1, =__bss_end
-    mov r2, #0
-    
-    .bss_clr:
-    	cmp r0, r1
-	strlt r2, [r0], #4
-	blo .bss_clr
+    @ Reset control registers
+    ldr r0, =0x00054078
+    ldr r1, =0x0000000F
+    ldr r2, =0x00F00000
 
-    ldr sp, =__stack_top__
-    b main
+    mcr p15, 0, r0, c1, c0, 0
+    mcr p15, 0, r1, c1, c0, 1
+    mcr p15, 0, r2, c1, c0, 2
 
-@ .global prepareForFirmlaunch
-@ .type   prepareForFirmlaunch, %function
-@ prepareForFirmlaunch:
-@     str r0, [r1]            @ tell ARM9 we're done
-@     mov r0, #0x20000000
+    @ VFPv2 init
+    @ https://github.com/derrekr/fastboot3DS/blob/f63c967369451b1fd0078e649cf0010fe10a62fd/source/arm11/start.s#L195
+    mov r0, #0
+    mov r1, #0xF00000           @ Give full access to cp10/11 in user and privileged mode
+    mov r2, #0x40000000         @ Clear exception bits and enable VFP11
+    mov r3, #0x3C00000          @ Round towards zero (RZ) mode, flush-to-zero mode, default NaN mode
+    mcr p15, 0, r1, c1, c0, 2   @ Write Coprocessor Access Control Register
+    mcr p15, 0, r0, c7, c5, 4   @ Flush Prefetch Buffer
+    fmxr fpexc, r2              @ Write Floating-point exception register
+    fmxr fpscr, r3              @ Write Floating-Point Status and Control Register
+
+
+    @ Get CPU ID
+    mrc p15, 0, r12, c0, c0, 5
+    ands r12, r12, #3
+
+    @ Setup stack according to CPU ID
+    ldr sp, =(_stack_base + 8192)
+    ldr r0, =8192
+    mla sp, r0, r12, sp
+
+    beq corezero_start
+
+    cmp r12, #1
+    blo coresmp_start
+
+		bl main
+
+1:
+    wfi
+    b 1b
+
+@ corezero_start:
+    @ assume __bss_len is 128 byte aligned
+@     ldr r0, =__bss_pa
+@    ldr r1, =__bss_len
+@    add r1, r0, r1
+@    mov r2, #0
+@    mov r3, #0
+@    mov r4, #0
+@    mov r5, #0
+@    .Lclearbss:
+@        cmp r0, r1
+@        .rept (128 / 16) @ 16 bytes copied per block
+@        stmloia r0!, {r2-r5}
+@        .endr
+@        blo .Lclearbss
 @
-@     _wait_for_core0_entrypoint_loop:
-@         ldr r1, [r0, #-4]   @ check if core0's entrypoint is 0
-@         cmp r1, #0
-@         beq _wait_for_core0_entrypoint_loop
-@
-@     bx r1                   @ jump to core0's entrypoint
-@ prepareForFirmlaunchEnd:
-@
-@ .global prepareForFirmlaunchSize
-@ prepareForFirmlaunchSize: .word prepareForFirmlaunchEnd - prepareForFirmlaunch
+@    bl SYS_CoreZeroInit
+
+@coresmp_start:
+@    bl SYS_CoreInit
+@    ldr lr, =MainLoop
+@    bx lr
+
+.section .bss.stack
+.align 12 @ make sure stack is aligned to a page boundary
+.global _stack_base
+_stack_base:
+    .space (1 * 8192)

@@ -32,6 +32,6 @@ global_asm!(include_str!("start.s"));
 #[no_mangle]
 pub extern "C" fn main() -> ! {
     loop {
-        screen::SCREEN_TOP.clear(colors::Color::Green as u32);
+        screen::SCREEN_TOP.clear(colors::Color::Green);
     }
 }

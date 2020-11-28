@@ -4,5 +4,8 @@ version = "0.0.0"
 authors = ["superwhiskers <whiskerdev@protonmail.com>"]
 edition = "2018"
 
+[profile.release]
+lto = true
+
 [dependencies]
 
