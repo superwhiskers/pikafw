@@ -74,8 +74,8 @@ $(output)/$(name).zip: all
 
 $(output)/boot.firm: $(build)/arm9.bin # $(build)/arm11.bin
 	@mkdir -p $(@D)
-	# @./firmtool.py build $@ -n 0x08006800 -e 0x1FF80000 -D $^ -A 0x08006800 0x1FF80000 -C NDMA XDMA
-	@./firmtool.py build $@ -n 0x23F00000 -e 0 -D $^ -A 0x23F00000 -C NDMA -i
+	# @firmtool/firmtool/__main__.py build $@ -n 0x08006800 -e 0x1FF80000 -D $^ -A 0x08006800 0x1FF80000 -C NDMA XDMA
+	@firmtool/firmtool/__main__.py build $@ -n 0x23F00000 -e 0 -D $^ -A 0x23F00000 -C NDMA -i
 
 $(build)/arm9.bin: $(directory_arm9)
 	@mkdir -p $(@D)
